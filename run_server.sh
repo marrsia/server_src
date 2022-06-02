@@ -1,0 +1,1 @@
+./robots-server -b 4 -c 4 -d 1500 -e 3 -k 7 -l 25 -n BombowySerwer -p 1213 -s 23875 -x 7 -y 7

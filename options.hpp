@@ -12,12 +12,14 @@ struct ServerOptions {
 	uint64_t turn_duration;
 	uint16_t explosion_radius;
 	uint16_t initial_blocks;
-	uint16_t game_lenght;
+	uint16_t game_length;
 	std::string server_name;
 	uint16_t port;
 	uint32_t seed;
 	uint16_t size_x;
 	uint16_t size_y;
+
+	ServerOptions(int, char*[]);
 };
 
 
