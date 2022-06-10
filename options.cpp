@@ -12,6 +12,7 @@
 ServerOptions::ServerOptions(int argc, char* argv[]) {
 
   namespace po = boost::program_options;
+  seed = std::time(0);
 	
   try {
     po::options_description desc("Allowed options");
@@ -25,7 +26,7 @@ ServerOptions::ServerOptions(int argc, char* argv[]) {
       ("game-length,l", po::value<uint16_t>(&game_length)->required(), "Length of the game")
       ("server-name,n", po::value<std::string>(&server_name)->required(), "Server name")
       ("port,p", po::value<uint16_t>(&port)->required(), "Server port")
-      ("seed,s", po::value<uint32_t>(&seed)->required(), "Seed for pseudorandom number generation")
+      ("seed,s", po::value<uint32_t>(&seed), "Seed for pseudorandom number generation")
       ("size-x,x", po::value<uint16_t>(&size_x)->required(), "Width of the game map")
       ("size-y,y", po::value<uint16_t>(&size_y)->required(), "Height of the game map")
 	  ;

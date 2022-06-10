@@ -55,6 +55,9 @@ void Event::serialize(Buffer &buffer) {
 ClientMessage::ClientMessage(Session &session) {
 	uint8_t message_id;
 	session.read_8(message_id);
+	if (message_id > 3) {
+		throw DeserializationError();
+	}
 	id = ClientMessageId(message_id);
 	switch (id) {
 	case ClientMessageId::Join:
@@ -69,8 +72,6 @@ ClientMessage::ClientMessage(Session &session) {
 		break;
 	case ClientMessageId::PlaceBomb:
 		break;
-	default:
-		throw DeserializationError();
 	}
 }
 
