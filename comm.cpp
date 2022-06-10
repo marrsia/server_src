@@ -92,3 +92,10 @@ void Session::send(Buffer &buffer) {
 void Session::close() {
 	socket.close();
 }
+
+std::string Session::get_address() {
+	std::ostringstream address;
+  address << socket.remote_endpoint();
+	return address.str();
+}
+

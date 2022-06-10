@@ -21,7 +21,13 @@ const int BUF_SIZE = 65535;
 
 void listening(Server &server, std::shared_ptr<Session> session) {
 	try {
-
+		while(true) {
+			ClientMessage message(*session);
+			if (message.id == ClientMessageId::Join) {
+				PlayerId player_id = server.add_player({message.name, (*session).get_address()});
+				break;
+			}
+		}
 	}
 	catch (std::exception &e) {
 		(*session).close();

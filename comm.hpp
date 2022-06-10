@@ -58,6 +58,8 @@ public:
 
 	void close();
 
+	std::string get_address();
+
 private:
   boost::asio::ip::tcp::socket socket;
 	boost::asio::ip::tcp::endpoint remote_ep;
