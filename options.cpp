@@ -4,12 +4,13 @@
 #include <string>
 #include <exception>
 #include <iostream>
+#include <chrono>
 
 
 ServerOptions::ServerOptions(int argc, char* argv[]) {
 
   namespace po = boost::program_options;
-  seed = std::time(0);
+  seed = (uint32_t) std::chrono::system_clock::now().time_since_epoch().count();
 	
   try {
     po::options_description desc("Allowed options");

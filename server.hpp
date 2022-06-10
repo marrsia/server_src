@@ -24,7 +24,7 @@ struct Bomb {
 enum struct GameStateId : uint8_t {Lobby = 0, Game = 1};
 // Struct holding information about an ongoing game.
 struct GameData {
-	uint32_t turn;
+	uint16_t turn;
 	std::unordered_map<PlayerId, Position> player_positions;
 	std::unordered_map<PlayerId, Score> deaths;
 	std::map<BombId, Bomb> bombs; 

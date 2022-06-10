@@ -20,8 +20,8 @@ GameData::GameData(std::minstd_rand &random,
 	next_bomb_id = 1;
 	turn = 0;
 	for (auto player: players) {
-		uint16_t x = random() % size_x;
-		uint16_t y = random() % size_y;
+		uint16_t x = (uint16_t) (random() % size_x);
+		uint16_t y = (uint16_t) (random() % size_y);
 		player_positions[player.first] = {x, y};
 		deaths[player.first] = 0;
 	}
@@ -36,8 +36,8 @@ GameData::GameData(std::minstd_rand &random,
 	
 	auto blocks_left = initial_blocks;
 	while (blocks_left > 0) {
-		uint16_t x = random() & size_x;
-		uint16_t y = random() % size_y;
+		uint16_t x = (uint16_t) (random() % size_x);
+		uint16_t y = (uint16_t) (random() % size_y);
 		if (! blocks.contains({x, y})) {
 			blocks.insert({x, y});
 			blocks_left--;
@@ -152,8 +152,8 @@ void Server::process_bombs() {
 					continue;
 				}
 				uint16_t dist_x, dist_y;
-				dist_x = abs((int) bomb.position.x - (int) player.second.x);
-				dist_y = abs((int) bomb.position.y - (int) player.second.y);
+				dist_x = (uint16_t) abs((int) bomb.position.x - (int) player.second.x);
+				dist_y = (uint16_t) abs((int) bomb.position.y - (int) player.second.y);
 				if ((dist_x == 0 && dist_y <= options.explosion_radius) ||
 						(dist_x <= options.explosion_radius && dist_y == 0)) {
 					game_data.current_deaths.insert(player.first);
@@ -170,8 +170,8 @@ void Server::process_deaths() {
 		Event event;
 		event.id = EventId::PlayerMoved;
 		event.player_id = player;
-		uint16_t x = random() % options.size_x;
-		uint16_t y = random() % options.size_y;
+		uint16_t x = (uint16_t) (random() % options.size_x);
+		uint16_t y = (uint16_t) (random() % options.size_y);
 		event.position = {x, y};
 		game_data.events.push_back(event);
 		game_data.deaths[player]++;

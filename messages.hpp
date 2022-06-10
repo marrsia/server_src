@@ -33,7 +33,7 @@ enum struct EventId : uint8_t {BombPlaced = 0, BombExploded = 1, PlayerMoved = 2
 
 struct Event {
   EventId id;
-  BombId bomb_id;
+  BombId bomb_id {0};
   Position position;
   std::vector<PlayerId> robots_destroyed;
   std::vector<Position> blocks_destroyed;
