@@ -63,7 +63,7 @@ void sending (Server &server, std::shared_ptr<Session> session) {
 			for (auto player: server.players) {
 				std::cout << "last player id " << last_player << " id from map " << player.first << "\n";
 				if (player.first <= last_player) {
-					break;
+					continue;
 				}
 				ServerMessage message;
 				message.id = ServerMessageId::AcceptedPlayer;
