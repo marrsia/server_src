@@ -80,9 +80,9 @@ void Session::read_string(std::string &location) {
 	uint8_t len;
 	read_8(len);
 	char c_str[len + 1];
+	memset(c_str, '0', len + 1);
 	boost::asio::read(socket, boost::asio::buffer((void*) c_str, len));
-	std::string str(c_str, len);
-	location = str;
+	location = std::string(c_str);
 }
 
 void Session::send(Buffer &buffer) {
