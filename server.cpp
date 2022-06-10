@@ -91,6 +91,7 @@ PlayerId Server::add_player(Player &player) {
 			std::cout << "GameState set to Game\n";
 		}
 		players_mutex.unlock();
+		player_joined.notify_all();
 		return ret;
 	}
 	players_mutex.unlock();
