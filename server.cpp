@@ -57,8 +57,9 @@ GameData::GameData() = default;
 
 //SERVER
 Server::Server(ServerOptions &options) :
+						 	game_state(GameStateId::Lobby),
+							 random(options.seed),
 							 options(options),
-						 	 random(options.seed), game_state(GameStateId::Lobby),
 							 next_player_id(0) 
 	{
 		hello.id = ServerMessageId::Hello;
@@ -220,6 +221,8 @@ void Server::process_actions() {
 					event.position = {(uint16_t) new_x,(uint16_t) new_y};
 					game_data.events.push_back(event);
 				}
+				break;
+			default:
 				break;
 			}
 		}

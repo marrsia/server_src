@@ -25,7 +25,7 @@ void listening(Server &server, std::shared_ptr<Session> session) {
 			ClientMessage message(*session);
 			if (message.id == ClientMessageId::Join) {
 				Player player {message.name, (*session).get_address()};
-				PlayerId player_id = server.add_player(player);
+				server.add_player(player);
 				break;
 			}
 		}
