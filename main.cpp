@@ -24,7 +24,6 @@ void listening(Server &server, std::shared_ptr<Session> session) {
 		while(true) {
 			ClientMessage message(*session);
 			if (message.id == ClientMessageId::Join) {
-				std::cout << "joining " << message.name << "\n";
 				Player player {message.name, (*session).get_address()};
 				PlayerId player_id = server.add_player(player);
 				break;
@@ -35,12 +34,6 @@ void listening(Server &server, std::shared_ptr<Session> session) {
 		std::cout << "Ending client session\n";
 		(*session).close();
 	}
-	// get join message from client
-	// if game started -> send gameStarted (how do we know to do that?)
-	// if lobby - add to server & wait for other players (on a conditional variable from server)
-	// after waking up listen for turns and use servers add event for as long as the game is active
-	// after/before each listen check that the game has not ended?
-	// if ended, go back to the beginning
 } 
 
 void sending (Server &server, std::shared_ptr<Session> session) {
@@ -52,16 +45,14 @@ void sending (Server &server, std::shared_ptr<Session> session) {
 		hello.serialize(buffer);
 		(*session).send(buffer);
 
-		while (true) {
+		while (server.check_lobby()) {
 			PlayerId last_player = server.newest_player;
 			std::unique_lock lock(server.players_mutex);
 			server.player_joined.wait(
 				lock,
 				[&] {return server.newest_player != last_player;}
 			);
-			std::cout << "finished waiting";
 			for (auto player: server.players) {
-				std::cout << "last player id " << last_player << " id from map " << player.first << "\n";
 				if (player.first <= last_player) {
 					continue;
 				}
@@ -75,14 +66,17 @@ void sending (Server &server, std::shared_ptr<Session> session) {
 				last_player = player.first;
 			}
 		}
+		ServerMessage game_started;
+		game_started.id = ServerMessageId::GameStarted;
+		game_started.players = server.players;
+		buffer.reset();
+		game_started.serialize(buffer);
+		(*session).send(buffer);
 		}
 		catch (std::exception &e) {
-			std::cout << "Ending client session\n";
 			(*session).close();
 		}
 	}
-	
-
 }
 
 
@@ -100,31 +94,8 @@ void accepting(Server &server, boost::asio::io_context &io_context, ServerOption
 		std::thread sender(sending, std::ref(server), session_ptr);
 		listener.detach();
 		sender.detach();
-
 	}
 	
-}
-
-
-void handle_game(Server &server, ServerOptions &options) {
-	while (true) {
-		server.reset();
-
-		// wait for game to start in some way?
-
-		//prep first turn message
-		server.initGame();
-		server.process_turn();
-		// it should be sent now
-		
-		for (int i = 1; i <= options.game_length; i++) {
-			std::this_thread::sleep_for(std::chrono::milliseconds(options.turn_duration));
-			server.process_turn();
-			// should be sent to players now
-		}
-	//	server.end_game();
-
-	}
 }
 }
 
@@ -132,17 +103,6 @@ void handle_game(Server &server, ServerOptions &options) {
 int main(int argc, char* argv[]) {
 	ServerOptions server_options(argc, argv);
 	std::cout << server_options.server_name << " running...\n";
-	std::cout <<
-							server_options.bomb_timer << " - bomb timer\n" <<
-							server_options.player_count << " - player_count\n" <<
-							server_options.turn_duration << " - turn duration\n" <<
-							server_options.explosion_radius << "- explosion radius\n" <<
-							server_options.initial_blocks << "- initial blocks\n" <<
-							server_options.game_length << " - game lenght\n" <<
-							server_options.port << " - port \n" <<
-							server_options.seed << "- seed\n" <<
-							server_options.size_x << " " << server_options.size_y << " - size x, y\n";
-	
 	boost::asio::io_context io_context;
 	Server server(server_options);
 	std::thread acceptor(accepting, std::ref(server), std::ref(io_context), std::ref(server_options));

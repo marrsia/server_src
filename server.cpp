@@ -83,20 +83,21 @@ void Server::initGame() {
 
 PlayerId Server::add_player(Player &player) {
 	players_mutex.lock();
+	game_state_mutex.lock();
 	if (game_state == GameStateId::Lobby) {
-		std::cout << "player joining\n";
 		PlayerId ret = ++next_player_id;
 		players.insert({next_player_id, player});
 		newest_player = next_player_id;
 		if (players.size() == options.player_count) {
 			game_state = GameStateId::Game;
-			std::cout << "GameState set to Game\n";
+			std::cout << "Starting game\n";
 		}
 		players_mutex.unlock();
-		std::cout << "notifying\n";
+		game_state_mutex.unlock();
 		player_joined.notify_all();
 		return ret;
 	}
+	game_state_mutex.unlock();
 	players_mutex.unlock();
 	return 0;
 }
@@ -136,7 +137,6 @@ void Server::process_bombs() {
 					if (!check_position(new_x, new_y)) {
 						break;
 					}
-					//check im not outside of the map!!
 					Position pos = {(uint16_t) new_x, (uint16_t) new_y};
 					if (game_data.blocks.contains(pos)) {
 						game_data.blocks.erase(pos);
@@ -169,7 +169,7 @@ void Server::process_deaths() {
 		Event event;
 		event.id = EventId::PlayerMoved;
 		event.player_id = player;
-		uint16_t x = random() & options.size_x;
+		uint16_t x = random() % options.size_x;
 		uint16_t y = random() % options.size_y;
 		event.position = {x, y};
 		game_data.events.push_back(event);
@@ -250,3 +250,10 @@ ServerMessage& Server::get_hello() {
 	return hello;
 }
 
+
+bool Server::check_lobby() {
+	game_state_mutex.lock();
+	bool res = (game_state == GameStateId::Lobby);
+	game_state_mutex.unlock();
+	return res;
+}

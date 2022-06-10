@@ -74,7 +74,7 @@ struct ServerMessage {
   uint16_t bomb_timer;
   PlayerId player_id;
   Player player;
-  std::unordered_map<PlayerId, Player> players;
+  std::map<PlayerId, Player> players;
   uint16_t turn;
   std::vector<Event> events;
   std::unordered_map<PlayerId, Score> scores;

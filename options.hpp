@@ -4,7 +4,7 @@
 #include <string>
 #include <exception>
 
-
+// Struct holding the server program options.
 struct ServerOptions {
 	uint16_t bomb_timer;
 	uint8_t player_count;

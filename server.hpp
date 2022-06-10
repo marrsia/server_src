@@ -22,7 +22,7 @@ struct Bomb {
 
 
 enum struct GameStateId : uint8_t {Lobby = 0, Game = 1};
-
+// Struct holding information about an ongoing game.
 struct GameData {
 	uint32_t turn;
 	std::unordered_map<PlayerId, Position> player_positions;
@@ -41,7 +41,7 @@ struct GameData {
 	
 };
 
-
+// Server class.
 class Server {
 public:
 	Server(ServerOptions &options);
@@ -55,6 +55,7 @@ public:
 	void add_player_action(PlayerId player_id, ClientMessage &message); 
 
 	GameStateId game_state;
+	std::mutex game_state_mutex;
 
 	std::vector<ServerMessage>& get_turns();
 	
@@ -83,7 +84,7 @@ private:
 	std::mutex actions_mutex;
 	std::map<PlayerId, ClientMessage> actions;
 	
-	GameData game_data; // information about the game
+	GameData game_data;
 	
 	std::vector<ServerMessage> turns;
 	ServerMessage game_ended;

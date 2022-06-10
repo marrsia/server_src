@@ -15,7 +15,7 @@ struct BufferException: public std::exception {
     return "Buffer writing error";
   }
 };
-
+// Buffer wrapper used for serialisation.
 class Buffer {
 public:
 
@@ -40,11 +40,12 @@ public:
 private:
 	char *buffer;
 	size_t size;
-	char* ptr; //first not-written spot
+	char* ptr; 
 
 	void checkSize(size_t dataSize);
 };
 
+// Socket wrapper used for sending and reading data.
 class Session {
 public:
 	Session(boost::asio::ip::tcp::socket &&socket, boost::asio::ip::tcp::endpoint &remote_ep);
