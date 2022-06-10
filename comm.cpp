@@ -65,16 +65,16 @@ Session::Session(boost::asio::ip::tcp::socket &&socket, boost::asio::ip::tcp::en
 	: socket(std::move(socket)), remote_ep(remote_ep) {}
 
 void Session::read_8(uint8_t &location) {
-	boost::asio::read(socket, boost::asio::buffer((void*) location, sizeof(uint8_t)));
+	boost::asio::read(socket, boost::asio::buffer(&location, sizeof(uint8_t)));
 }
 
 void Session::read_16(uint16_t &location) {
-	boost::asio::read(socket, boost::asio::buffer((void *) location, sizeof(uint16_t)));
+	boost::asio::read(socket, boost::asio::buffer(&location, sizeof(uint16_t)));
 	location = ntohs(location);
 }
 
 void Session::read_32(uint32_t &location) {
-	boost::asio::read(socket, boost::asio::buffer((void*) location, sizeof(uint32_t)));
+	boost::asio::read(socket, boost::asio::buffer(&location, sizeof(uint32_t)));
 	location = ntohl(location);
 }
 
@@ -83,7 +83,7 @@ void Session::read_string(std::string &location) {
 	read_8(len);
 	char c_str[len + 1];
 	memset(c_str, 0, len + 1);
-	boost::asio::read(socket, boost::asio::buffer((void*) c_str, len));
+	boost::asio::read(socket, boost::asio::buffer(c_str, len));
 	location = std::string(c_str);
 }
 
