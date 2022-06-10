@@ -7,9 +7,7 @@
 #include <arpa/inet.h>
 #include <cstring>
 #include <memory>
-#include <boost/smart_ptr.hpp>
 #include <boost/asio.hpp>
-#include <boost/thread/thread.hpp>
 
 
 struct BufferException: public std::exception {
@@ -47,7 +45,7 @@ private:
 	void checkSize(size_t dataSize);
 };
 
-class Session  : public std::enable_shared_from_this<Session> {
+class Session {
 public:
 	Session(boost::asio::ip::tcp::socket &&socket, boost::asio::ip::tcp::endpoint &remote_ep);
 

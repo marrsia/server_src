@@ -42,6 +42,13 @@ struct Event {
   void serialize(Buffer &buffer);
 };
 
+struct DeserializationError: public std::exception {
+  inline const char * what () const throw () {
+    return "Deserialization error";
+  }
+};
+
+
 enum struct ClientMessageId : uint8_t {Join = 0, PlaceBomb = 1, PlaceBlock = 2, Move = 3};
 
 struct ClientMessage {

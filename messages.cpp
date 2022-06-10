@@ -65,6 +65,12 @@ ClientMessage::ClientMessage(Session &session) {
 		session.read_8(dir);
 		direction = Direction(dir);
 		break;
+	case ClientMessageId::PlaceBlock:
+		break;
+	case ClientMessageId::PlaceBomb:
+		break;
+	default:
+		throw DeserializationError();
 	}
 }
 

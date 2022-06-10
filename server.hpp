@@ -62,6 +62,8 @@ public:
 
 	void end_game();
 
+	ServerMessage& get_hello();
+
 private:
 	std::minstd_rand random;	
 

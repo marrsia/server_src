@@ -3,6 +3,7 @@
 #include <string>
 #include <arpa/inet.h>
 #include <cstring>
+#include <boost/asio.hpp>
 
 #include "comm.hpp"
 
@@ -56,7 +57,7 @@ char* Buffer::get_data() {
 }
 
 size_t Buffer::get_size() {
-	return size;
+	return (size_t) (ptr - buffer);
 }
 
 //SESSION
