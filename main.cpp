@@ -44,16 +44,42 @@ void listening(Server &server, std::shared_ptr<Session> session) {
 } 
 
 void sending (Server &server, std::shared_ptr<Session> session) {
-	try {
+	while(true) {
+		try {
 		ServerMessage hello = server.get_hello();
 		char buf[BUF_SIZE];
 		Buffer buffer(buf, BUF_SIZE);
 		hello.serialize(buffer);
 		(*session).send(buffer);
+
+		while (true) {
+			PlayerId last_player = server.newest_player;
+			std::unique_lock lock(server.players_mutex);
+			server.player_joined.wait(
+				lock,
+				[&] {return server.newest_player != last_player;}
+			);
+			for (auto player: server.players) {
+				if (player.first <= last_player) {
+					break;
+				}
+				ServerMessage message;
+				message.id = ServerMessageId::AcceptedPlayer;
+				message.player_id = player.first;
+				message.player = player.second;
+				buffer.reset();
+				message.serialize(buffer);
+				(*session).send(buffer);
+				last_player = player.first;
+		}
+	
+		}
+		}
+		catch (std::exception &e) {
+			(*session).close();
+		}
 	}
-	catch (std::exception &e) {
-		(*session).close();
-	}
+	
 
 }
 

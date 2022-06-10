@@ -83,11 +83,19 @@ void Server::initGame() {
 
 PlayerId Server::add_player(Player &player) {
 	players_mutex.lock();
-	PlayerId ret = next_player_id;
-	players.insert({next_player_id, player});
-	next_player_id++;
+	if (game_state == GameStateId::Lobby) {
+		PlayerId ret = next_player_id;
+		players.insert({next_player_id, player});
+		next_player_id++;
+		if (players.size() == options.player_count) {
+			game_state = GameStateId::Game;
+			std::cout << "GameState set to Game\n";
+		}
+		players_mutex.unlock();
+		return ret;
+	}
 	players_mutex.unlock();
-	return ret;
+	return 0;
 }
 
 void Server::add_player_action(PlayerId player_id, ClientMessage &message) {
@@ -237,4 +245,8 @@ std::vector<ServerMessage>& Server::get_turns() {
 
 ServerMessage& Server::get_hello() {
 	return hello;
+}
+
+ServerMessage get_new_player() {
+
 }

@@ -63,15 +63,20 @@ public:
 	void end_game();
 
 	ServerMessage& get_hello();
+	
+	std::condition_variable player_joined;
+	PlayerId newest_player = 0;
+
+	ServerMessage get_new_player();
+	std::mutex players_mutex;
+	std::map<PlayerId, Player> players;
 
 private:
 	std::minstd_rand random;	
 
 	ServerOptions options;
 
-	std::mutex players_mutex;
 	PlayerId next_player_id;
-	std::map<PlayerId, Player> players;
 
 	std::mutex actions_mutex;
 	std::map<PlayerId, ClientMessage> actions;
