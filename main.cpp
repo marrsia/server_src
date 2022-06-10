@@ -1,3 +1,9 @@
+/*
+Maria Śmigielska - rozwiązanie zadania Bomberman, serwer
+Niestety udało mi się zaimplementować tylko funkcjonalność Lobby,
+ale napisałam część kodu potrzebnego do zarządzania grą (w pliku server.cpp)
+i mam nadzieję że zostanie on wzięty pod uwagę przy ocenie stylu.
+*/
 #include <iostream>
 #include <cstdlib>
 #include <iostream>

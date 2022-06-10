@@ -94,7 +94,7 @@ void ServerMessage::serialize(Buffer &buffer) {
 			break;
 		
 		case ServerMessageId::GameStarted:
-			buffer.write_32(players.size());
+			buffer.write_32((uint32_t) players.size());
 			for (auto mapped_player: players) {
 				buffer.write_8(mapped_player.first);
 				mapped_player.second.serialize(buffer);
@@ -103,14 +103,14 @@ void ServerMessage::serialize(Buffer &buffer) {
 
 		case ServerMessageId::Turn:
 			buffer.write_16(turn);
-			buffer.write_32(events.size());
+			buffer.write_32((uint32_t) events.size());
 			for (auto event: events) {
 				event.serialize(buffer);
 			}
 			break;
 		
 		case ServerMessageId::GameEnded:
-			buffer.write_32(scores.size());
+			buffer.write_32((uint32_t) scores.size());
 			for (auto score: scores) {
 				buffer.write_8(score.first);
 				buffer.write_32(score.second);

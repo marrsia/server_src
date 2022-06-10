@@ -8,7 +8,7 @@
 #include "comm.hpp"
 
 //BUFFER
-Buffer::Buffer(char* buffer, size_t size) : size(size), buffer(buffer), ptr(buffer) { }
+Buffer::Buffer(char* buffer, size_t size) : buffer(buffer), size(size), ptr(buffer) { }
 
 void Buffer::write_8(uint8_t data) {
 	checkSize(sizeof(data));
@@ -35,7 +35,7 @@ void Buffer::write_64(uint64_t data) {
 }
 
 void Buffer::write_string(std::string &data) {
-  uint8_t size = data.size();
+  uint8_t size = (uint8_t) data.size();
 	checkSize(size + 1);
 	write_8(size);
 	memcpy(ptr, data.c_str(), size);
