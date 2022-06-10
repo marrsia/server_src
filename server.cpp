@@ -87,6 +87,7 @@ PlayerId Server::add_player(Player &player) {
 		std::cout << "player joining\n";
 		PlayerId ret = ++next_player_id;
 		players.insert({next_player_id, player});
+		newest_player = next_player_id;
 		if (players.size() == options.player_count) {
 			game_state = GameStateId::Game;
 			std::cout << "GameState set to Game\n";
