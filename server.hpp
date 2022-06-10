@@ -63,6 +63,8 @@ public:
 	void end_game();
 
 	ServerMessage& get_hello();
+
+	bool check_lobby();
 	
 	std::condition_variable player_joined;
 	PlayerId newest_player = 0;

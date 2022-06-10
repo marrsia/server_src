@@ -84,6 +84,7 @@ void Server::initGame() {
 PlayerId Server::add_player(Player &player) {
 	players_mutex.lock();
 	if (game_state == GameStateId::Lobby) {
+		std::cout << "player joining\n";
 		PlayerId ret = ++next_player_id;
 		players.insert({next_player_id, player});
 		if (players.size() == options.player_count) {
@@ -247,6 +248,3 @@ ServerMessage& Server::get_hello() {
 	return hello;
 }
 
-ServerMessage get_new_player() {
-
-}
