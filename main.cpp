@@ -32,7 +32,7 @@ void listening(Server &server, std::shared_ptr<Session> session) {
 		}
 	}
 	catch (std::exception &e) {
-		std::cout << e.what() << "\n";
+		std::cout << "Ending client session\n";
 		(*session).close();
 	}
 	// get join message from client
@@ -59,7 +59,9 @@ void sending (Server &server, std::shared_ptr<Session> session) {
 				lock,
 				[&] {return server.newest_player != last_player;}
 			);
+			std::cout << "finished waiting";
 			for (auto player: server.players) {
+				std::cout << "last player id " << last_player << " id from map " << player.first << "\n";
 				if (player.first <= last_player) {
 					break;
 				}
@@ -75,6 +77,7 @@ void sending (Server &server, std::shared_ptr<Session> session) {
 		}
 		}
 		catch (std::exception &e) {
+			std::cout << "Ending client session\n";
 			(*session).close();
 		}
 	}
