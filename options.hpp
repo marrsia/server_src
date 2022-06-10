@@ -5,7 +5,6 @@
 #include <exception>
 
 
-
 struct ServerOptions {
 	uint16_t bomb_timer;
 	uint8_t player_count;

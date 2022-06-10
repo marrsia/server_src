@@ -4,6 +4,10 @@
 #include <string>
 #include <exception>
 #include <iostream>
+/** TODO: 
+ * seed is optional
+ * 
+ */
 
 ServerOptions::ServerOptions(int argc, char* argv[]) {
 
