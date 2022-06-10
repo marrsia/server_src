@@ -59,7 +59,7 @@ GameData::GameData() = default;
 Server::Server(ServerOptions &options) :
 							 options(options),
 						 	 random(options.seed), game_state(GameStateId::Lobby),
-							 next_player_id(1) 
+							 next_player_id(0) 
 	{
 		hello.id = ServerMessageId::Hello;
 		hello.server_name = options.server_name;
@@ -84,9 +84,8 @@ void Server::initGame() {
 PlayerId Server::add_player(Player &player) {
 	players_mutex.lock();
 	if (game_state == GameStateId::Lobby) {
-		PlayerId ret = next_player_id;
+		PlayerId ret = ++next_player_id;
 		players.insert({next_player_id, player});
-		next_player_id++;
 		if (players.size() == options.player_count) {
 			game_state = GameStateId::Game;
 			std::cout << "GameState set to Game\n";

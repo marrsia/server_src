@@ -71,8 +71,7 @@ void sending (Server &server, std::shared_ptr<Session> session) {
 				message.serialize(buffer);
 				(*session).send(buffer);
 				last_player = player.first;
-		}
-	
+			}
 		}
 		}
 		catch (std::exception &e) {
