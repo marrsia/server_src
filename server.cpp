@@ -59,7 +59,17 @@ GameData::GameData() = default;
 Server::Server(ServerOptions &options) :
 							 options(options),
 						 	 random(options.seed), game_state(GameStateId::Lobby),
-							 next_player_id(1) { };
+							 next_player_id(1) 
+	{
+		hello.id = ServerMessageId::Hello;
+		hello.server_name = options.server_name;
+		hello.players_count = options.player_count;
+		hello.size_x = options.size_x;
+		hello.size_y = options.size_y;
+		hello.game_length = options.game_length;
+		hello.explosion_radius = options.explosion_radius;
+		hello.bomb_timer = options.bomb_timer; 					 
+	};
 
 void Server::reset() {
 	next_player_id = 1;
@@ -69,14 +79,6 @@ void Server::reset() {
 
 void Server::initGame() {
 	game_data = GameData(random, players, options.initial_blocks, options.size_x, options.size_y);
-	hello.id = ServerMessageId::Hello;
-	hello.server_name = options.server_name;
-	hello.players_count = options.player_count;
-	hello.size_x = options.size_x;
-	hello.size_y = options.size_y;
-	hello.game_length = options.game_length;
-	hello.explosion_radius = options.explosion_radius;
-	hello.bomb_timer = options.bomb_timer;
 }
 
 PlayerId Server::add_player(Player &player) {
