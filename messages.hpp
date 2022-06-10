@@ -19,7 +19,7 @@ struct Position {
   uint16_t x;
   uint16_t y;
   void serialize(Buffer &buffer);
-  bool operator<(const Position &pos) const;
+  bool operator<(const Position&) const;
 };
 
 struct Player {
@@ -49,7 +49,7 @@ struct ClientMessage {
   std::string name;
   Direction direction;
 
-  ClientMessage();
+  ClientMessage() = default;
   ClientMessage(Session &session);
 };
 

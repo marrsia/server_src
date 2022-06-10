@@ -68,8 +68,6 @@ ClientMessage::ClientMessage(Session &session) {
 	}
 }
 
-ClientMessage::ClientMessage() = default;
-
 void ServerMessage::serialize(Buffer &buffer) {
 	buffer.write_8((uint8_t) id);
 	switch (id) {

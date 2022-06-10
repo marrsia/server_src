@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <set>
 #include <queue>
-#include <boost/bind.hpp>
+#include <memory>
 #include <boost/smart_ptr.hpp>
 #include <boost/asio.hpp>
 #include <boost/thread/thread.hpp>
@@ -26,7 +26,7 @@ void accepting(Server &server, boost::asio::io_context &io_context, ServerOption
 		acceptor.accept(socket);
 		socket.set_option(tcp::no_delay(true));
 		tcp::endpoint remote_ep = socket.remote_endpoint();
-//		std::make_shared<Session>(socket, remote_ep);
+		std::make_shared<Session>(&socket, remote_ep);
 	}
 
 	//start listener thread
@@ -49,7 +49,30 @@ void sending (Server &server, boost::asio::io_context &io_context, std::shared_p
 	//
 	//
 }
+
+
+void handle_game(Server &server, ServerOptions &options) {
+	while (true) {
+		server.reset();
+
+		// wait for game to start in some way?
+
+		//prep first turn message
+		server.initGame();
+		server.process_turn();
+		// it should be sent now
+		
+		for (int i = 1; i <= options.game_length; i++) {
+			std::this_thread::sleep_for(std::chrono::milliseconds(options.turn_duration));
+			server.process_turn();
+			// should be sent to players now
+		}
+		server.end_game();
+		
 }
+
+}
+
 
 
 int main(int argc, char* argv[]) {
@@ -67,6 +90,6 @@ int main(int argc, char* argv[]) {
 							server_options.size_x << " " << server_options.size_y << " - size x, y\n";
 	
 	boost::asio::io_context io_context;
-	Server server(io_context, server_options);
+	Server server(server_options);
 	
 }

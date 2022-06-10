@@ -4,7 +4,6 @@
 #include <unordered_map>
 #include <set>
 #include <queue>
-#include <boost/bind.hpp>
 #include <boost/smart_ptr.hpp>
 #include <boost/asio.hpp>
 #include <boost/thread/thread.hpp>
@@ -19,10 +18,12 @@ GameData::GameData(std::minstd_rand &random,
 									std::map<PlayerId, Player> &players, 
 									uint16_t initial_blocks, uint16_t size_x, uint16_t size_y) {
 	next_bomb_id = 1;
+	turn = 0;
 	for (auto player: players) {
 		uint16_t x = random() % size_x;
 		uint16_t y = random() % size_y;
 		player_positions[player.first] = {x, y};
+		deaths[player.first] = 0;
 	}
 	
 	for (auto player: player_positions) {
@@ -55,8 +56,8 @@ GameData::GameData(std::minstd_rand &random,
 GameData::GameData() = default;
 
 //SERVER
-Server::Server(boost::asio::io_service &io_service, ServerOptions &options) :
-							 io_context(io_context), options(options),
+Server::Server(ServerOptions &options) :
+							 options(options),
 						 	 random(options.seed), game_state(GameStateId::Lobby),
 							 next_player_id(1) { };
 
@@ -151,6 +152,7 @@ void Server::process_deaths() {
 		uint16_t y = random() % options.size_y;
 		event.position = {x, y};
 		game_data.events.push_back(event);
+		game_data.deaths[player]++;
 	}
 }
 
@@ -184,6 +186,7 @@ void Server::process_actions() {
 				event.position = game_data.player_positions[player_id];
 				game_data.events.push_back(event);
 				game_data.blocks.insert(event.position);
+				break;
 			}
 			case ClientMessageId::Move: {
 				int new_x, new_y;

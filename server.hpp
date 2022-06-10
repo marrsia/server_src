@@ -7,7 +7,6 @@
 #include <unordered_map>
 #include <set>
 #include <queue>
-#include <boost/bind.hpp>
 #include <boost/smart_ptr.hpp>
 #include <boost/asio.hpp>
 #include <boost/thread/thread.hpp>
@@ -45,7 +44,7 @@ struct GameData {
 
 class Server {
 public:
-	Server(boost::asio::io_service& io_service, ServerOptions &options);
+	Server(ServerOptions &options);
 	
 	void reset();
 
@@ -61,9 +60,10 @@ public:
 	
 	void process_turn();
 
+	void end_game();
+
 private:
 	std::minstd_rand random;	
-	boost::asio::io_context& io_context; //this might not be needed actually
 
 	ServerOptions options;
 
@@ -77,6 +77,9 @@ private:
 	GameData game_data; // information about the game
 	
 	std::vector<ServerMessage> turns;
+	ServerMessage game_ended;
+	ServerMessage hello;
+	ServerMessage game_started;
 
 	bool check_position(int x, int y);
 	void process_bombs();
