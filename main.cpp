@@ -108,5 +108,6 @@ int main(int argc, char* argv[]) {
 	
 	boost::asio::io_context io_context;
 	Server server(server_options);
+	std::thread acceptor(accepting, std::ref(server), std::ref(io_context), std::ref(server_options));
 	
 }
