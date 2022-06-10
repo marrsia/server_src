@@ -32,6 +32,7 @@ void listening(Server &server, std::shared_ptr<Session> session) {
 		}
 	}
 	catch (std::exception &e) {
+		std::cout << e.what() << "\n";
 		(*session).close();
 	}
 	// get join message from client
