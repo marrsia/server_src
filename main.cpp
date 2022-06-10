@@ -59,10 +59,10 @@ void accepting(Server &server, boost::asio::io_context &io_context, ServerOption
 		tcp::endpoint remote_ep = socket.remote_endpoint();
 		std::shared_ptr<Session> session_ptr = std::make_shared<Session>(std::move(socket), remote_ep);
 
-	//	std::thread listener(listening, std::ref(server),  session_ptr);
-	//	std::thread sender(sending, std::ref(server), session_ptr);
-	//	listener.detach();
-	//	sender.detach();
+		std::thread listener(listening, std::ref(server),  session_ptr);
+		std::thread sender(sending, std::ref(server), session_ptr);
+		listener.detach();
+		sender.detach();
 
 	}
 	
