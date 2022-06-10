@@ -70,10 +70,12 @@ void Session::read_8(uint8_t &location) {
 
 void Session::read_16(uint16_t &location) {
 	boost::asio::read(socket, boost::asio::buffer((void *) location, sizeof(uint16_t)));
+	location = ntohs(location);
 }
 
 void Session::read_32(uint32_t &location) {
 	boost::asio::read(socket, boost::asio::buffer((void*) location, sizeof(uint32_t)));
+	location = ntohl(location);
 }
 
 void Session::read_string(std::string &location) {
